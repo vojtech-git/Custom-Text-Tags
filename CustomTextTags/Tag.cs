@@ -12,14 +12,14 @@ namespace CustomTextTags
 
         public ReplaceString replaceLogic;
 
-        public string Replace(string stringToReplace) // logika stejná pro všechny tagy
+        public string Replace(string stringToTag) // logika stejná pro všechny tagy
         {
-            stringToReplace.Replace($"<{tagName}>", "");
-            stringToReplace.Replace($"</{tagName}>", "");
+            stringToTag = stringToTag.Replace($"<{tagName}>", "");
+            stringToTag = stringToTag.Replace($"</{tagName}>", "");
 
-            replaceLogic(stringToReplace);
+            stringToTag = replaceLogic(stringToTag);
 
-            return stringToReplace;
+            return stringToTag;
         }
     }
 }

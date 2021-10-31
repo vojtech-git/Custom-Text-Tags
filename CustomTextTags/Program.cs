@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace CustomTextTags
@@ -19,7 +14,7 @@ namespace CustomTextTags
 
     class Program
     {        
-        public static Tag[] tags = new Tag[] { new Tag { tagName = "!", replaceLogic = new ReplaceString(replaceLogicExclamaitionMark) } }; // názvy tagů
+        public static Tag[] tags = new Tag[] { new Tag { tagName = "!", replaceLogic = new ReplaceString(replaceLogicExclamationMark) } }; // názvy tagů
 
         static void Main(string[] args)
         {
@@ -32,27 +27,41 @@ namespace CustomTextTags
 
         public static string Edit(string textToEdit)
         {
+            string finishedValue = "";
+
             Regex rgx;
-            string pattern = @"^<"; //^<> <\/>
+            string pattern;
 
             foreach (Tag tag in tags)
             {
-                pattern += tag.tagName + @"> <\";
-                pattern += tag.tagName + @">";
+                pattern = @"<" + tag.tagName + @">\S*<\/" + tag.tagName + @"\>";
                 rgx = new Regex(pattern);
 
-                Match match = rgx.Match(textToEdit);
+                MatchCollection matches = rgx.Matches(textToEdit);
 
-                tag.replaceLogic(match.Value);
+                foreach (Match match in matches)
+                {
+                    if (match.Success)
+                    {
+                        finishedValue = textToEdit.Replace(match.Value, tag.Replace(match.Value));
+                        Console.WriteLine("match succes with tag " + tag.tagName);
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("match not succes with tag " + tag.tagName);
+
+                    }
+                }
             }
 
-            return "";
+            return finishedValue;
         }
 
         #region replace metohods
-        public static string replaceLogicExclamaitionMark(string textToReplace)
+        public static string replaceLogicExclamationMark(string textForExclamation)
         {
-            return $"!!{textToReplace.ToUpper()}!!";
+            return $"!!{textForExclamation.ToUpper()}!!";
         }
         #endregion
     }
