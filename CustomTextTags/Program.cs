@@ -3,23 +3,22 @@ using System.Text.RegularExpressions;
 
 namespace CustomTextTags
 {
-    // asi to vyřeším pomocí String.Substring() a String.IndexOf().
-    // pomoci toho najdu otevírací string a zavírací string a jejich pozice 
-    // potom si ulozim string mezi jejich pozicema a pak v původnim textu dam proste Replace() ty strigy co jsem nasel mezi tagama
-    // jaký tag jsem nasel a co je mezi nim za string si ulozim do dictionary a potom proste budu mit metodu ReplaceStrings()
-
-    // ok existuje Regex.Match() což vrací ten matchující string to řeší hodně
-
     public delegate string ReplaceString(string textToEdit);
 
     class Program
-    {        
-        public static Tag[] tags = new Tag[] { new Tag { tagName = "!", replaceLogic = new ReplaceString(replaceLogicExclamationMark) } }; // názvy tagů
+    {
+        public static Tag[] tags = new Tag[] { new Tag { tagName = "!", replaceLogic = new ReplaceString(ReplaceLogicExclamationMark) }, new Tag { tagName = "_", replaceLogic = new ReplaceString(ReplaceLogicUnderscore) } }; // názvy tagů
+        public static string userInput;
+
 
         static void Main(string[] args)
         {
-            string userInput = Console.ReadLine();
-            //Edit(userInput);
+            Console.Write("Vložte text k upravě: ");
+
+            foreach (string textFromConsole in args)
+            {
+                userInput += textFromConsole;
+            }
 
             Console.WriteLine(Edit(userInput));
             Console.ReadLine();
@@ -27,8 +26,6 @@ namespace CustomTextTags
 
         public static string Edit(string textToEdit)
         {
-            string finishedValue = "";
-
             Regex rgx;
             string pattern;
 
@@ -43,25 +40,31 @@ namespace CustomTextTags
                 {
                     if (match.Success)
                     {
-                        finishedValue = textToEdit.Replace(match.Value, tag.Replace(match.Value));
-                        Console.WriteLine("match succes with tag " + tag.tagName);
-
-                    }
-                    else
-                    {
-                        Console.WriteLine("match not succes with tag " + tag.tagName);
+                        textToEdit = textToEdit.Replace(match.Value, tag.Replace(match.Value));
 
                     }
                 }
             }
 
-            return finishedValue;
+            return textToEdit;
         }
 
         #region replace metohods
-        public static string replaceLogicExclamationMark(string textForExclamation)
+        public static string ReplaceLogicExclamationMark(string textForExclamation)
         {
             return $"!!{textForExclamation.ToUpper()}!!";
+        }
+
+        public static string ReplaceLogicUnderscore(string textForUnderscore)
+        {
+            int eSize = textForUnderscore.Length;
+            textForUnderscore = textForUnderscore.Replace(textForUnderscore, "");
+            for (int i = 0; i < eSize; i++)
+            {
+                textForUnderscore += "_";
+            }
+
+            return textForUnderscore;
         }
         #endregion
     }
