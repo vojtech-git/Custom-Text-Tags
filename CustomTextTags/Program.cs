@@ -13,15 +13,10 @@ namespace CustomTextTags
 
         static void Main(string[] args)
         {
-            Console.Write("Vložte text k upravě: ");
-
-            foreach (string textFromConsole in args)
+            foreach (string consoleAddedText in args)
             {
-                userInput += textFromConsole;
+                Console.WriteLine(Edit(consoleAddedText));
             }
-
-            Console.WriteLine(Edit(userInput));
-            Console.ReadLine();
         }
 
         public static string Edit(string textToEdit)
