@@ -17,6 +17,8 @@ namespace CustomTextTags
             {
                 Console.WriteLine(Edit(consoleAddedText));
             }
+
+            Console.ReadLine();
         }
 
         public static string Edit(string textToEdit)
